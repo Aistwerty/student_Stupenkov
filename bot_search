@@ -37,8 +37,9 @@ if (button!= undefined){
             button.click();
         }
     },500)
-}else{
+}else if(location.hostname == "yandex.ru"){
     let nextYandexPage = true;
+    let currentYandexPage = document.getElementsByClassName("pager__item pager__item_current_yes pager__item_kind_page")[0].innerText;
     for (let i=0; i<links.length; i++){
         let link=links[i];
         if(link.href.indexOf(site)!=-1){
@@ -48,21 +49,13 @@ if (button!= undefined){
             break;
         }
     }
-    if (nextYandexPage) buttonNext.click();
-}
+    if(nextYandexPage && currentYandexPage<11) setTimeout(()=>{buttonNext.click();},5000);
+    else if(currentYandexPage == 11) location.href = "yandex.ru";
 }else{
-    let nextYandexPage = true;
-    for (let i=0; i<links.length; i++){
-        let link=links[i];
-        if(link.href.indexOf("crushdrummers.ru")!=-1){
-            nextYandexPage = false;
-            link.removeAttribute('target');
-            link.click();
-            break;
-        }
-    }
-    if (nextYandexPage) buttonNext.click();
-}
-    }
-    if (nextYandexPage) document.getElementsByClassName("link link_theme_none link_target_serp pager__item pager__item_kind_next i-bem link_js_inited").click();
+    setInterval(()=>{
+        if(Math.random()>=0.8) location.href = "https://yandex.ru/";
+        let link = links[Math.floor(Math.random()*links.length)];
+        if(link.href.indexOf(location.hostname)!=-1){
+           link.click();}
+        },3000);
 }
