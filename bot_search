@@ -15,9 +15,12 @@ function getCookie(name) {
   ));
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
-
-let keywords = ["Барабанное шоу","Заказать шоу барабанщиков","Барабанное шоу в Москве"];
-    //["Как звучит флейта","Валторна","Тромбон","Кларнет","Фагот","Гобой","Саксафон"];
+let sites = {
+    "crushdrummers.ru":["Барабанное шоу","Заказать шоу барабанщиков","Барабанное шоу в Москве"],
+    "xn----7sbab5aqcbiddtdj1e1g.xn--p1ai":["Как звучит флейта","Валторна","Тромбон","Кларнет","Фагот","Гобой","Саксафон"]
+};
+let site = Object.keys(sites)[Math.floor(Math.random()*Object.keys(sites).length)];
+let keywords = sites[site];
 let randomIndex = Math.floor(Math.random()*keywords.length);
 let keyword = keywords[randomIndex];
 let yandexInput = document.getElementsByName('text')[0];
@@ -26,6 +29,7 @@ let buttonNext = document.getElementsByClassName("pager__item_kind_next")[0];
 let links = document.links;
 if (button!= undefined){
     let i=0;
+    document.cookie = "site="+site;
     let timerId = setInterval(()=>{
         yandexInput.value += keyword[i++];
         if(i==keyword.length){
@@ -33,6 +37,19 @@ if (button!= undefined){
             button.click();
         }
     },500)
+}else{
+    let nextYandexPage = true;
+    for (let i=0; i<links.length; i++){
+        let link=links[i];
+        if(link.href.indexOf(site)!=-1){
+            nextYandexPage = false;
+            link.removeAttribute('target');
+            link.click();
+            break;
+        }
+    }
+    if (nextYandexPage) buttonNext.click();
+}
 }else{
     let nextYandexPage = true;
     for (let i=0; i<links.length; i++){
